@@ -1,6 +1,8 @@
 package br.com.unisinos.redes.ftp.tarefas;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -22,17 +24,15 @@ public class DistribuidorDeTarefas implements Runnable {
 	@Override
 	public void run() {
 
-		
-		
-		try (Scanner entradaCliente = new Scanner(socket.getInputStream())) {
-
+		try (Scanner entradaCliente = new Scanner(socket.getInputStream()); OutputStream saidaCliente = socket.getOutputStream();) {
+			
 			while (entradaCliente.hasNext()) {
 				
 				Tarefa tarefa = new Tarefa();
 				
 				String comando = entradaCliente.nextLine();
 				
-				switch (comando.toLowerCase().substring(0,comando.indexOf(" "))) {
+				switch (comando.toLowerCase()) {
 				case "put":
 					break;
 				case "get":
@@ -44,13 +44,15 @@ public class DistribuidorDeTarefas implements Runnable {
 				case "cd":
 					break;
 				case "ls":
+					tarefa.listarDiretorio();
 					break;
 				case "pwd":
 					break;
 				case "mkdir":
+					
 					break;
 				default:
-					System.out.println("Comando não existente!");
+					System.out.println("Comando não reconhecido!");
 				}
 				
 				

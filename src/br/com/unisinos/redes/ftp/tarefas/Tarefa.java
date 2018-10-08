@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class Tarefa {
 
 	// Provisório, fiz para ir testando os métodos testar
-	private static final String ROOT = "./FTP/";
+	private String root = "./FTP/";
 
 	/**
 	 * Cria arquivo no Path atual, caso o arquivo exista deve decidir (S/N) se
@@ -26,7 +26,7 @@ public class Tarefa {
 	 * @throws IOException
 	 */
 	public void criarArquivo(String nomeArquivo) throws IOException {
-		File file = new File(ROOT + nomeArquivo);
+		File file = new File(root + nomeArquivo);
 		if (!file.exists()) {
 			file.createNewFile();
 		} else {
@@ -48,7 +48,7 @@ public class Tarefa {
 	 * @throws IOException
 	 */
 	public void criarDiretorio(String nomeDiretorio) throws IOException {
-		File file = new File(ROOT + nomeDiretorio);
+		File file = new File(root + nomeDiretorio);
 		if (!file.exists()) {
 			file.mkdir();
 		} else {
@@ -64,7 +64,7 @@ public class Tarefa {
 	 *            no caso de arquivo)
 	 */
 	public void remover(String nome) {
-		boolean delete = new File(ROOT + nome).delete();
+		boolean delete = new File(root + nome).delete();
 		if (delete) {
 			System.out.println("Arquivo Removido com sucesso");
 		} else {
@@ -80,7 +80,7 @@ public class Tarefa {
 	 * Exemplo: Arquivo A.txt - Arquivo Diretório C - Diretório
 	 */
 	public void listarDiretorio() {
-		File[] listFiles = new File(ROOT).listFiles();
+		File[] listFiles = new File(root).listFiles();
 		for (int i = 0; i < listFiles.length; i++) {
 			if (listFiles[i].isDirectory()) {
 				System.out.println(listFiles[i].getName() + " - Diretório");
@@ -101,8 +101,8 @@ public class Tarefa {
 	 */
 	public void renomear(String nomeArquivoOld, String nomeArquivoNew) {
 
-		File oldFile = new File(ROOT + nomeArquivoOld);
-		File newFile = new File(ROOT + nomeArquivoNew);
+		File oldFile = new File(root + nomeArquivoOld);
+		File newFile = new File(root + nomeArquivoNew);
 
 		if (!newFile.exists()) {
 
@@ -113,6 +113,16 @@ public class Tarefa {
 			}
 		} else {
 			System.out.println("O nome de arquivo " + nomeArquivoNew + " já existe, não foi possível renomea-lo!");
+		}
+	}
+
+	public void caminhar(String path) {
+		if (path.equals("..") && (!root.equalsIgnoreCase("./FTP/") || !root.equalsIgnoreCase("./FTP"))) {
+			 root = root.substring(root.lastIndexOf("/"));
+		} else if (new File(root + path).exists()) {
+			root = root + path;
+		} else {
+			System.out.println("O diretório especificado não existe!");
 		}
 	}
 }
