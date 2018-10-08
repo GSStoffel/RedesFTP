@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class Tarefa {
 
 	// Provisório, fiz para ir testando os métodos testar
-	private static final String ROOT = "C:\\Users\\gssto\\Desktop\\FTP\\";
+	private static final String ROOT = "./FTP/";
 	
 	/**
 	 * Cria arquivo no Path atual, caso o arquivo exista deve decidir (S/N) se deseja substituir o arquivo original.
