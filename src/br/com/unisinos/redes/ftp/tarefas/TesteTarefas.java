@@ -3,8 +3,9 @@ package br.com.unisinos.redes.ftp.tarefas;
 import java.io.IOException;
 
 /**
- * Classe para testar as tarefas separadamente enquanto a aplicação não está completa, posteriormente será removida
- *  
+ * Classe para testar as tarefas separadamente enquanto a aplicação não está
+ * completa, posteriormente será removida
+ * 
  * @author Gabriel Sperb Stoffel
  *
  */

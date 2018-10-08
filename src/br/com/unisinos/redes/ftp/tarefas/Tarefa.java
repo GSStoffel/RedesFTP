@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
-
 /**
  * 
- * Classe responsável pela tarefas (Excluir, Remover, Renomear...) que serão executadas pelo Cliente e/ou Servidor.
+ * Classe responsável pela tarefas (Excluir, Remover, Renomear...) que serão
+ * executadas pelo Cliente e/ou Servidor.
  * 
  * @author Gabriel Sperb Stoffel
  *
@@ -16,11 +16,13 @@ public class Tarefa {
 
 	// Provisório, fiz para ir testando os métodos testar
 	private static final String ROOT = "./FTP/";
-	
+
 	/**
-	 * Cria arquivo no Path atual, caso o arquivo exista deve decidir (S/N) se deseja substituir o arquivo original.
+	 * Cria arquivo no Path atual, caso o arquivo exista deve decidir (S/N) se
+	 * deseja substituir o arquivo original.
 	 * 
-	 * @param nomeArquivo - Nome do arquivo a ser criado (inclusive a extensão)
+	 * @param nomeArquivo
+	 *            - Nome do arquivo a ser criado (inclusive a extensão)
 	 * @throws IOException
 	 */
 	public void criarArquivo(String nomeArquivo) throws IOException {
@@ -41,7 +43,8 @@ public class Tarefa {
 	/**
 	 * Cria Diretório no Path atual.
 	 * 
-	 * @param nomeDiretorio - Nome do diretório a ser criado
+	 * @param nomeDiretorio
+	 *            - Nome do diretório a ser criado
 	 * @throws IOException
 	 */
 	public void criarDiretorio(String nomeDiretorio) throws IOException {
@@ -54,9 +57,11 @@ public class Tarefa {
 	}
 
 	/**
-	 * Exclui o arquivo especificado no Path atual. 
+	 * Exclui o arquivo especificado no Path atual.
 	 * 
-	 * @param nome - Nome do arquivo/diretório a ser excluido (inclusive a extensão no caso de arquivo)
+	 * @param nome
+	 *            - Nome do arquivo/diretório a ser excluido (inclusive a extensão
+	 *            no caso de arquivo)
 	 */
 	public void remover(String nome) {
 		boolean delete = new File(ROOT + nome).delete();
@@ -69,11 +74,10 @@ public class Tarefa {
 	}
 
 	/**
-	 * Lista conteúdo do diretório atual informando o que é Diretório e o que é arquivo 
+	 * Lista conteúdo do diretório atual informando o que é Diretório e o que é
+	 * arquivo
 	 * 
-	 * Exemplo: 
-	 * 	Arquivo A.txt - Arquivo 
-	 *  Diretório C - Diretório
+	 * Exemplo: Arquivo A.txt - Arquivo Diretório C - Diretório
 	 */
 	public void listarDiretorio() {
 		File[] listFiles = new File(ROOT).listFiles();
@@ -90,8 +94,10 @@ public class Tarefa {
 	 * 
 	 * Renomeio o arquivo/diretório do Path atual
 	 * 
-	 * @param nomeArquivoOld - Nome atual do arquivo
-	 * @param nomeArquivoNew - Novo nome para o arquivo
+	 * @param nomeArquivoOld
+	 *            - Nome atual do arquivo
+	 * @param nomeArquivoNew
+	 *            - Novo nome para o arquivo
 	 */
 	public void renomear(String nomeArquivoOld, String nomeArquivoNew) {
 
