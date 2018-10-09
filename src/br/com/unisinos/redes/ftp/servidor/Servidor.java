@@ -2,10 +2,10 @@ package br.com.unisinos.redes.ftp.servidor;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import br.com.unisinos.redes.ftp.cliente.Cliente;
 import br.com.unisinos.redes.ftp.tarefas.DistribuidorDeTarefas;
 
 /**
@@ -26,13 +26,13 @@ public class Servidor {
 			ExecutorService threadPool = Executors.newCachedThreadPool();
 
 			while (true) {
-				try (Socket socket = server.accept()) {
-					System.out.println("Aceitando novo cliente na porta" + socket.getPort());
+				Cliente cliente = new Cliente(server.accept());
+					System.out.println("Aceitando novo cliente na porta" + cliente.getSocket().getPort());
 					
-					DistribuidorDeTarefas distribuidorDeTarefas = new DistribuidorDeTarefas(socket);
+					DistribuidorDeTarefas distribuidorDeTarefas = new DistribuidorDeTarefas(cliente);
 					threadPool.execute(distribuidorDeTarefas);
 
-				}
+				
 			}
 		}
 	}

@@ -19,51 +19,35 @@ public class EnviadorDeComando implements Runnable {
 		// Enviando dados para o servidor
 		try (PrintStream saida = new PrintStream(socket.getOutputStream())) {
 
-			try (Scanner scanner = new Scanner(System.in)) {
-				while (scanner.hasNextLine()) {
-					String comando = scanner.nextLine();
+			Scanner scanner = new Scanner(System.in);
+			
+			while (scanner.hasNextLine()) {
+				String comando = scanner.nextLine();
 
-					if (comando.trim().toLowerCase().equals("help")) {
-						System.out.println(
-								"Comandos disponíveis:\n"
-								+ "put: Enviar arquivo\n"
-								+ "get: Receber arquivo\n"
-								+ "rename: Renomear arquivo\n"
-								+ "delete: Remover arquivo ou diretório\n"
-								+ "cd: Mover-se por diretórios\n"
-								+ "ls: Exibir arquivos do Path atual\n"
-								+ "pwd: Exibir diretório atual\n"
-								+ "mkdir: Criar diretório\n");
-						
-						/*case "rename":
+				if (comando.trim().toLowerCase().equals("help")) {
+					System.out.println(
+						"Comandos disponíveis:\n"
+						+ "put [/arquivo a enviar.txt] : Enviar arquivo\n"
+						+ "get [/arquivo a receber.txt] [/path receptor] : Receber arquivo\n" 
+						+ "rename [Nome antigo.txt] [Novo Nome] : Renomear arquivo\n"
+						+ "delete [Arquivo.txt] : Remover arquivo ou diretório\n" 
+						+ "cd [/caminho] : Mover-se por diretórios\n"
+						+ "ls : Exibir arquivos do Path atual\n" 
+						+ "pwd : Exibir diretório atual\n"
+						+ "mkdir [Diretório] : Criar diretório\n" 
+						+ "bye: Sair do FTP"
+					);
+				} else if (comando.trim().toLowerCase().equals("bye")) {
+					System.out.println("Até logo!");
 					break;
-				case "delete":
-					break;
-				case "cd":
-					break;
-				case "ls":
-					tarefa.listarDiretorio();
-					break;
-				case "pwd":
-					break;
-				case "mkdir":
-					break;
-				default:*/
-					}
-					
-					if (comando.trim().toLowerCase().equals("bye")) {
-						System.out.println("Até logo!");
-						break;
-					}
-					
-
+				} else {
 					saida.println(comando);
 				}
 			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
-
 }

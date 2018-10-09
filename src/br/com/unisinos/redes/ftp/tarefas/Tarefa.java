@@ -2,7 +2,9 @@ package br.com.unisinos.redes.ftp.tarefas;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.PrintStream;
+
+import br.com.unisinos.redes.ftp.cliente.Cliente;
 
 /**
  * 
@@ -14,78 +16,107 @@ import java.util.Scanner;
  */
 public class Tarefa {
 
-	// Provisório, fiz para ir testando os métodos testar
-	private String root = "./FTP/";
-
 	/**
 	 * Cria arquivo no Path atual, caso o arquivo exista deve decidir (S/N) se
 	 * deseja substituir o arquivo original.
 	 * 
+	 * @param cliente
+	 *            - Objeto cliente com as informações do mesmo
 	 * @param nomeArquivo
 	 *            - Nome do arquivo a ser criado (inclusive a extensão)
 	 * @throws IOException
 	 */
-	public void criarArquivo(String nomeArquivo) throws IOException {
-		File file = new File(root + nomeArquivo);
-		if (!file.exists()) {
-			file.createNewFile();
-		} else {
-			System.out.println("O arquivo já existe, deseja substitui-lo? S/N");
-			Scanner scanner = new Scanner(System.in);
-			if (scanner.nextLine().toUpperCase().equals("S")) {
+
+	public void criarArquivo(Cliente cliente, String nomeArquivo) throws IOException {
+
+		try (PrintStream saidaCliente = new PrintStream(cliente.getSocket().getOutputStream());) {
+			File file = new File(cliente.getPathAtual() + nomeArquivo);
+			if (!file.exists()) {
 				file.createNewFile();
 			} else {
-				System.out.println("Operação cancelada!");
+				saidaCliente.println("O arquivo já existe, operação cancelada!");
 			}
 		}
+		// else {
+		// System.out.println("O arquivo já existe, deseja substitui-lo? S/N");
+		// Scanner scanner = new Scanner(System.in);
+		// if (scanner.nextLine().toUpperCase().equals("S")) {
+		// file.createNewFile();
+		// } else {
+		// System.out.println("Operação cancelada!");
+		// }
+		// }
 	}
 
 	/**
 	 * Cria Diretório no Path atual.
+	 * @param os 
 	 * 
+	 * @param cliente
+	 *            - Objeto cliente com as informações do mesmo
 	 * @param nomeDiretorio
 	 *            - Nome do diretório a ser criado
 	 * @throws IOException
 	 */
-	public void criarDiretorio(String nomeDiretorio) throws IOException {
-		File file = new File(root + nomeDiretorio);
-		if (!file.exists()) {
-			file.mkdir();
-		} else {
-			System.out.println("Diretório já existe!");
+	public void criarDiretorio(Cliente cliente, String nomeDiretorio) throws IOException {
+
+		try (PrintStream saidaCliente = new PrintStream(cliente.getSocket().getOutputStream())) {
+
+			File file = new File(cliente.getPathAtual() + nomeDiretorio);
+			if (!file.exists()) {
+				file.mkdir();
+			} else {
+				saidaCliente.println("Diretório já existe!");
+			}
 		}
 	}
 
 	/**
 	 * Exclui o arquivo especificado no Path atual.
 	 * 
-	 * @param nome
-	 *            - Nome do arquivo/diretório a ser excluido (inclusive a extensão
-	 *            no caso de arquivo)
+	 * @param cliente
+	 *            - Objeto cliente com as informações do mesmo
+	 * @param nomeArquivo
+	 *            - Nome do arquivo a ser demovido (incluvise coma extenção)
+	 * @throws IOException
 	 */
-	public void remover(String nome) {
-		boolean delete = new File(root + nome).delete();
-		if (delete) {
-			System.out.println("Arquivo Removido com sucesso");
-		} else {
-			System.out.println(
-					"Não foi possível excluir o Arquivo/Diretório especificado. Verifiquei o nome e se o mesmo existe.");
+	public void remover(Cliente cliente, String nomeArquivo) throws IOException {
+		try (PrintStream saidaCliente = new PrintStream(cliente.getSocket().getOutputStream());) {
+			boolean delete = new File(cliente.getPathAtual() + nomeArquivo).delete();
+			if (delete) {
+				saidaCliente.println("Arquivo Removido com sucesso");
+			} else {
+				saidaCliente.println(
+						"Não foi possível excluir o Arquivo/Diretório especificado. Verifiquei o nome e se o mesmo existe.");
+			}
 		}
 	}
 
 	/**
 	 * Lista conteúdo do diretório atual informando o que é Diretório e o que é
-	 * arquivo
+	 * arquivo <br>
+	 * <br>
+	 * Exemplo: <br>
+	 * Arquivo A.txt - Arquivo <br>
+	 * Diretório C - Diretório <br>
+	 * ...
 	 * 
-	 * Exemplo: Arquivo A.txt - Arquivo Diretório C - Diretório
+	 * @param cliente
+	 *            - Objeto cliente com as informações do mesmo
+	 * @throws IOException
+	 * 
 	 */
-	public void listarDiretorio() {
-		File[] listFiles = new File(root).listFiles();
-		for (int i = 0; i < listFiles.length; i++) {
-			if (listFiles[i].isDirectory()) {
-				System.out.println(listFiles[i].getName() + " - Diretório");
-			} else {
-				System.out.println(listFiles[i].getName() + " - Arquivo");
+	public void listarDiretorio(Cliente cliente) throws IOException {
+		try (PrintStream saidaCliente = new PrintStream(cliente.getSocket().getOutputStream());) {
+			File[] listFiles = new File(cliente.getPathAtual()).listFiles();
+			for (int i = 0; i < listFiles.length; i++) {
+				if (listFiles[i].isDirectory()) {
+					saidaCliente.println("text");
+					saidaCliente.println(listFiles[i].getName() + " - Diretório");
+				} else {
+					saidaCliente.println("text");
+					saidaCliente.println(listFiles[i].getName() + " - Arquivo");
+				}
 			}
 		}
 	}
@@ -94,35 +125,138 @@ public class Tarefa {
 	 * 
 	 * Renomeio o arquivo/diretório do Path atual
 	 * 
+	 * @param cliente
+	 *            - Objeto cliente com as informações do mesmo
 	 * @param nomeArquivoOld
 	 *            - Nome atual do arquivo
 	 * @param nomeArquivoNew
 	 *            - Novo nome para o arquivo
+	 * @throws IOException
 	 */
-	public void renomear(String nomeArquivoOld, String nomeArquivoNew) {
+	public void renomear(Cliente cliente, String nomeArquivoOld, String nomeArquivoNew) throws IOException {
+		try (PrintStream saidaCliente = new PrintStream(cliente.getSocket().getOutputStream())) {
 
-		File oldFile = new File(root + nomeArquivoOld);
-		File newFile = new File(root + nomeArquivoNew);
+			File oldFile = new File(cliente.getPathAtual() + nomeArquivoOld);
+			File newFile = new File(cliente.getPathAtual() + nomeArquivoNew);
 
-		if (!newFile.exists()) {
-
-			if (oldFile.exists()) {
-				oldFile.renameTo(newFile);
+			if (!newFile.exists()) {
+				if (oldFile.exists()) {
+					oldFile.renameTo(newFile);
+				} else {
+					saidaCliente.println("text");
+					saidaCliente.println("O arquivo " + nomeArquivoOld + " não existe");
+				}
 			} else {
-				System.out.println("O arquivo " + nomeArquivoOld + " não existe");
+
+				saidaCliente.println("text");
+				saidaCliente
+						.println("O nome de arquivo " + nomeArquivoNew + " já existe, não foi possível renomea-lo!");
 			}
-		} else {
-			System.out.println("O nome de arquivo " + nomeArquivoNew + " já existe, não foi possível renomea-lo!");
+
 		}
 	}
 
-	public void caminhar(String path) {
-		if (path.equals("..") && (!root.equalsIgnoreCase("./FTP/") || !root.equalsIgnoreCase("./FTP"))) {
-			 root = root.substring(root.lastIndexOf("/"));
-		} else if (new File(root + path).exists()) {
-			root = root + path;
+	/**
+	 * Caminhar um diretório para frente ou para trás
+	 * 
+	 * @param cliente
+	 *            - Objeto cliente com as informações do mesmo
+	 * @param pathAtual
+	 *            - Path em que o cliente está atualmente (PWD)
+	 * @param pathNovo
+	 *            - Path para qual o usuário irá se mover <br>
+	 *            ".." - retorna um diretório <br>
+	 *            "/[diretorio]" avança para um diretorio
+	 * @throws IOException
+	 */
+	public void caminhar(Cliente cliente, String pathNovo) throws IOException {
+
+		String pathAtual = removeUltimaBarra(cliente.getPathAtual());
+		pathNovo = removePrimeiraBarra(pathNovo);
+
+		// Caso tenha que retonar o diretório o mesmo não pode estar já na raiz
+		if (pathNovo.equals("..") && !isRaiz(cliente)) {
+			cliente.setPathAtual(pathAtual.substring(pathAtual.lastIndexOf("/")));
+
+			// O novo path existe?
+		} else if (new File(pathAtual + "/" + pathNovo).exists()) {
+			cliente.setPathAtual(pathAtual + "/" + pathNovo + "/");
+
+			// O diretório não é válido
 		} else {
-			System.out.println("O diretório especificado não existe!");
+			try (PrintStream saidaCliente = new PrintStream(cliente.getSocket().getOutputStream())) {
+				saidaCliente.println("text");
+				saidaCliente.println("Diretório inválido!");
+			}
 		}
 	}
+
+	/**
+	 * Exibe onde o cliente está atualmente dentro do FTP
+	 * 
+	 * @param cliente
+	 *            - Objeto cliente com as informações do mesmo
+	 * @throws IOException
+	 */
+	public void exibirDiretorio(Cliente cliente) throws IOException {
+		try (PrintStream saidaCliente = new PrintStream(cliente.getSocket().getOutputStream())) {
+			saidaCliente.println("text");
+			saidaCliente.println(cliente.getPathAtual());
+		}
+	}
+
+	/**
+	 * Comunica cliente caso ocorra erro
+	 * 
+	 * @param cliente
+	 *            - Objeto cliente com as informações do mesmo
+	 * @throws IOException
+	 */
+	public void comunicarErro(Cliente cliente) throws IOException {
+		try (PrintStream saidaCliente = new PrintStream(cliente.getSocket().getOutputStream())) {
+			saidaCliente.println("text");
+			saidaCliente.println("Comando não reconhecido!");
+		}
+	}
+
+	/**
+	 * Método auxiliar para remover a primeira barra
+	 * 
+	 * @param pathNovo
+	 *            - Novo Path para o qual o cliente irá
+	 * @return String - Novo Path sem a barra inicial
+	 */
+	private String removePrimeiraBarra(String pathNovo) {
+		if (pathNovo.charAt(0) == '/') {
+			return pathNovo.substring(1, pathNovo.length());
+		}
+		return pathNovo;
+	}
+
+	/**
+	 * Método auxiliar para remover a última barra do path
+	 * 
+	 * @param pathAtual
+	 *            - Caimnho onde o cliente está atualmente
+	 * @return String - Path sem a última barra
+	 */
+	private String removeUltimaBarra(String pathAtual) {
+		if (pathAtual.charAt(pathAtual.length() - 1) == '/') {
+			return pathAtual.substring(0, pathAtual.length() - 1);
+		}
+		return pathAtual;
+	}
+
+	/**
+	 * Método auxiliar que verifica se o Path atual do cliente é a raiz ou não
+	 * 
+	 * @param cliente
+	 *            - cliente contendo a informação do caminho que está atualmente
+	 * @return true - É a Raiz <br>
+	 *         false - Não é a Raiz
+	 */
+	private boolean isRaiz(Cliente cliente) {
+		return (cliente.getPathAtual().equalsIgnoreCase("./FTP/") || cliente.getPathAtual().equalsIgnoreCase("./FTP"));
+	}
+
 }

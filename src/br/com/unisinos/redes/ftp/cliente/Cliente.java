@@ -13,20 +13,42 @@ import java.net.UnknownHostException;
  */
 public class Cliente {
 
+	private String pathAtual;
+	private Socket socket;
+
+	public Cliente(Socket socket) {
+		this.socket = socket;
+		this.pathAtual = "./FTP/";
+	}
+
+	public String getPathAtual() {
+		return pathAtual;
+	}
+
+	public void setPathAtual(String pathAtual) {
+		this.pathAtual = pathAtual;
+	}
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
+	}
+
 	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
 
-		try (Socket socket = new Socket("localhost", 12345)) {
+		Socket socketCliente = new Socket("localhost", 12345);
 
 			System.out.println("Conexão estabelecida com sucesso!");
 
-			Thread threadEnviaComandos = new Thread(new EnviadorDeComando(socket));
-			Thread threadRecebeResposta = new Thread(new ReceptorDeComandos(socket));
+			Thread threadEnviaComandos = new Thread(new EnviadorDeComando(socketCliente));
+			Thread threadRecebeResposta = new Thread(new ReceptorDeResposta(socketCliente));
 
 			threadEnviaComandos.start();
 			threadRecebeResposta.start();
 
 			threadEnviaComandos.join();
-
-		}
 	}
 }
