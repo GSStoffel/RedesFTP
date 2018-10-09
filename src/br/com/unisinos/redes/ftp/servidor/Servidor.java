@@ -27,12 +27,10 @@ public class Servidor {
 
 			while (true) {
 				Cliente cliente = new Cliente(server.accept());
-					System.out.println("Aceitando novo cliente na porta" + cliente.getSocket().getPort());
+					System.out.println("Aceitando novo cliente na porta " + cliente.getSocket().getPort());
 					
 					DistribuidorDeTarefas distribuidorDeTarefas = new DistribuidorDeTarefas(cliente);
 					threadPool.execute(distribuidorDeTarefas);
-
-				
 			}
 		}
 	}
