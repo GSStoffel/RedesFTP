@@ -52,7 +52,8 @@ public class DistribuidorDeTarefas implements Runnable {
 					}
 					
 					saidaCliente.println("file");
-					saidaCliente.println(parametros[1]);				
+					saidaCliente.println(parametros[0]);
+					saidaCliente.println(parametros[1]);
 					
 					byte [] fileByteArray  = new byte [(int)returnFile.length()];
 			        FileInputStream fis = new FileInputStream(returnFile);
