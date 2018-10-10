@@ -1,6 +1,8 @@
 package br.com.unisinos.redes.ftp.tarefas;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -41,7 +43,24 @@ public class DistribuidorDeTarefas implements Runnable {
 					break;
 
 				case "get": // get Aquivo B.txt > C:\Minha Pasta\
-					// TODO get
+					String[] parametros = comando.substring(4, comando.length()).split(" > ");
+					File returnFile = new File(cliente.getPathAtual() + parametros[0]);
+					
+					if (!returnFile.exists()) {
+						saidaCliente.println("Arquivo não encontrado:" + parametros[0]);
+						break;
+					}
+					
+					saidaCliente.println("file");
+					saidaCliente.println(parametros[1]);				
+					
+					byte [] fileByteArray  = new byte [(int)returnFile.length()];
+			        FileInputStream fis = new FileInputStream(returnFile);
+			        BufferedInputStream bis = new BufferedInputStream(fis);
+			        bis.read(fileByteArray,0,fileByteArray.length);
+					
+			        saidaCliente.write(fileByteArray,0,fileByteArray.length);
+					cliente.getSocket().getOutputStream().flush();										
 					break;
 
 				case "rename": // rename Arquivo A.txt > Arquivo B.txt
