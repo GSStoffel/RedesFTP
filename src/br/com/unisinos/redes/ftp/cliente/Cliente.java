@@ -8,7 +8,10 @@ import java.net.UnknownHostException;
  * Classe que desempenhará o papel de Cliente onde fará a conexão com o servidor
  * e executará/enviará os comandos respectivos ao seu papel
  * 
- * @author Gabriel Sperb Stoffel
+ * @author 
+ * Gabriel Sperb Stoffel
+ * <br>
+ * Victor E. Scherer
  *
  */
 public class Cliente {

@@ -6,6 +6,15 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ * Classe responsável por receber dados e resposta de comandos do servidor
+ * 
+ * @author 
+ * Gabriel Sperb Stoffel
+ * <br>
+ * Victor E. Scherer
+ *
+ */
 public class ReceptorDeResposta implements Runnable {
 
 	private Socket socket;
@@ -41,10 +50,7 @@ public class ReceptorDeResposta implements Runnable {
 		    	    	   current += bytesRead;
 		    	        }
 				    }
-				    
 				    bos.write(fileBytes, 0 , current);
-				    
-				    
 				}
 			}
 		} catch (IOException e) {
