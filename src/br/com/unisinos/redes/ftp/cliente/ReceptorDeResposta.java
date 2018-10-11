@@ -1,5 +1,7 @@
 package br.com.unisinos.redes.ftp.cliente;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -28,7 +30,20 @@ public class ReceptorDeResposta implements Runnable {
 				if (respostaServidor.nextLine().equals("text")) {
 					System.out.println(respostaServidor.nextLine());
 				} else if (respostaServidor.nextLine().equals("file")) {
-					// arquivo
+
+					String caminho = respostaServidor.nextLine();
+					
+					FileOutputStream fos = new FileOutputStream(new File(caminho));
+					byte[] cbuffer = new byte[1024];
+					int bytesRead;
+
+					System.out.println("Recebendo arquivo...");
+					while ((bytesRead = socket.getInputStream().read(cbuffer)) != -1) {
+						fos.write(cbuffer, 0, bytesRead);
+						fos.flush();
+					}
+					
+					fos.close();
 				}
 			}
 		} catch (IOException e) {

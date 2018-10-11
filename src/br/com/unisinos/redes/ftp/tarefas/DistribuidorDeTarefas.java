@@ -68,7 +68,26 @@ public class DistribuidorDeTarefas implements Runnable {
 					break;
 
 				case "get": // get Aquivo B.txt > C:\Minha Pasta\
+					String[] parameters = comando.substring(4, comando.length()).split(" > ");
+					byte[] tamanhoLimite = new byte[4096];
+					int bytesLidos;
+					
+					PrintStream printStream = new PrintStream(cliente.getSocket().getOutputStream());
+					printStream.println();
+					printStream.println("file");
+					
+					printStream.println(parameters[1] + parameters[0]);
+														
+					// Criando arquivo que sera transferido pelo servidor
+					FileInputStream fileOnServer = new FileInputStream("C:\\teste\\suck\\" + parameters[0]);
 
+					while ((bytesLidos = fileOnServer.read(tamanhoLimite)) != -1) {
+						cliente.getSocket().getOutputStream().write(tamanhoLimite, 0, bytesLidos);
+						cliente.getSocket().getOutputStream().flush();
+					}
+					
+					fileOnServer.close();
+					
 					break;
 
 				case "rename": // rename Arquivo A.txt > Arquivo B.txt
