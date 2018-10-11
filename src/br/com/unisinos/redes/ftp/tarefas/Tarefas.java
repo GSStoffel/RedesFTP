@@ -1,6 +1,12 @@
 package br.com.unisinos.redes.ftp.tarefas;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 import br.com.unisinos.redes.ftp.cliente.Cliente;
@@ -151,6 +157,35 @@ public class Tarefas {
 	}
 
 	/**
+	 * 
+	 * @param inputStream
+	 * @param comando
+	 * @param pathAtual
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void receberArquivo(InputStream inputStream, String comando, String pathAtual)
+			throws FileNotFoundException, IOException {
+		String path = comando.substring(comando.indexOf(" "), comando.length());
+		System.out.println(path);
+		String pathBarraInvertida = path.replace("\\", "/");
+		System.out.println(pathBarraInvertida);
+		FileOutputStream fos = new FileOutputStream(new File(removeUltimaBarra(pathAtual + "/" + removePrimeiraBarra(pathBarraInvertida).substring(pathBarraInvertida.lastIndexOf("/"), pathBarraInvertida.length()))));
+		byte[] cbuffer = new byte[1024];
+		int bytesRead;
+
+		System.out.println("Recebendo arquivo...");
+		while ((bytesRead = inputStream.read(cbuffer)) != -1) {
+			fos.write(cbuffer, 0, bytesRead);
+			fos.flush();
+		}
+		
+		fos.close();
+	}
+	
+	
+	
+	/**
 	 * Método auxiliar para remover a primeira barra
 	 * 
 	 * @param pathNovo
@@ -189,5 +224,9 @@ public class Tarefas {
 	private boolean isRaiz(Cliente cliente) {
 		return (cliente.getPathAtual().equalsIgnoreCase("./FTP/") || cliente.getPathAtual().equalsIgnoreCase("./FTP"));
 	}
+
+	
+
+	
 
 }
